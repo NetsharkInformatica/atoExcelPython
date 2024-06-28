@@ -1,0 +1,31 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+import openpyxl
+from time import sleep
+
+
+lePlan=openpyxl.load_workbook('dados_clientes.xlsx')
+paginaClientes=lePlan['Sheet1']
+driver=webdriver.Firefox()
+driver.get('https://consultcpf-devaprender.netlify.app/')
+
+for linha in paginaClientes.iter_rows(min_row=2,values_only=True):
+    nome, valor, cpf, vencimento = linha
+    
+    
+    #input cpfInput
+    sleep(3)
+    campoPesquisa=driver.find_element(By.XPATH,"//input[@id='cpfInput']")
+    sleep(1)
+    campoPesquisa.send_keys(cpf)
+    sleep(1)
+    btnPesquisar=driver.find_element(By.XPATH,"//button[@class='btn btn-custom btn-lg btn-block mt-3']")
+    btnPesquisar.click()
+    sleep(4)
+    statusLabel=driver.find_element(By.XPATH,"//span[@id='statusLabel']")
+    if statusLabel.text== 'em dia':
+        dataPag=driver.find_element(By.XPath,"//p[@id='paymentDate']")
+        metodoPag=driver.find_element(By.XPath,"//p[@id='paymentMethod']")
+    else:
+    
+    
